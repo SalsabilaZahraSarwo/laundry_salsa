@@ -2,19 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+
+use App\Models\Order;
+use App\Models\SalsabilaOrder;
+use App\Models\SalsabilaService;
+use App\Models\User;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        // Cek apakah yang login role-nya adalah 'admin'
         if (session('loginRole') !== 'admin') {
-            // Jika bukan admin, tolak akses
-            return abort(403, 'Akses ditolak. Halaman ini hanya untuk admin.');
+            abort(403, 'Akses ditolak. Hanya untuk admin.');
         }
 
-        // Jika admin, lanjut tampilkan dashboard
-        return view('admin.dashboard');
+        $totalServices = SalsabilaService::count();
+        $totalOrders = SalsabilaOrder::count();
+        $totalUsers = User::where('role', 'user')->count();
+
+        return view('admin.dashboard', compact('totalServices', 'totalOrders', 'totalUsers'));
     }
 }

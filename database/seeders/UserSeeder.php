@@ -8,16 +8,22 @@ use App\Models\User;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
+        // Admin
         User::create([
-            'name' => 'Admin Laundry',
+            'name' => 'Admin Salsabila',
             'email' => 'admin@example.com',
-            'password' => Hash::make('admin123'),
-            'role' => 'admin'
+            'password' => Hash::make('password'),
+            'role' => 'admin',
+        ]);
+
+        // User biasa
+        User::create([
+            'name' => 'salsa',
+            'email' => 'salsa@gmail.com',
+            'password' => Hash::make('password'),
+            'role' => 'user',
         ]);
     }
 }

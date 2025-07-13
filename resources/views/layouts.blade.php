@@ -10,7 +10,8 @@
             --pink-light: #fce4ec;
             --pink-dark: #c2185b;
             --text-dark: #333;
-            --bg-light: #fff0f5;
+            --bg-light: #fff8fb;
+            --shadow-light: rgba(0, 0, 0, 0.08);
         }
 
         * {
@@ -20,109 +21,142 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background-color: var(--bg-light);
             color: var(--text-dark);
+            line-height: 1.7;
         }
 
         header {
             background-color: var(--pink-primary);
-            padding: 20px 30px;
             color: white;
+            padding: 24px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 2px 6px var(--shadow-light);
         }
 
         header h2 {
+            font-size: 1.8rem;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        header h2::before {
+            content: "🧺";
+            font-size: 1.5rem;
         }
 
         nav a {
             color: white;
-            margin-left: 20px;
-            text-decoration: none;
+            margin-left: 28px;
             font-weight: bold;
+            text-decoration: none;
+            font-size: 1rem;
+            position: relative;
+            padding-bottom: 4px;
         }
 
-        nav a:hover {
-            text-decoration: underline;
+        nav a:hover::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background-color: white;
+            left: 0;
+            bottom: 0;
         }
 
         .container {
-            max-width: 480px;
-            margin: 40px auto;
+            max-width: 1140px;
+            margin: 60px auto;
+            padding: 40px;
             background-color: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 10px 24px var(--shadow-light);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .btn-pink {
             background-color: var(--pink-primary);
-            border: none;
             color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s;
+            padding: 12px 22px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 12px;
         }
 
         .btn-pink:hover {
             background-color: var(--pink-dark);
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 8px;
-            margin-bottom: 16px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
-
-        .alert {
-            background-color: var(--pink-light);
-            color: var(--pink-dark);
-            padding: 10px;
-            margin-bottom: 20px;
-            border-left: 5px solid var(--pink-primary);
-            border-radius: 5px;
+            transform: scale(1.05);
         }
 
         footer {
-            text-align: center;
-            padding: 20px;
-            margin-top: 40px;
             background-color: #f8bbd0;
             color: #880e4f;
+            text-align: center;
+            padding: 30px 10px;
+            margin-top: 60px;
+            font-size: 0.95rem;
+            border-top: 3px dashed #ec407a;
         }
 
         .text-center {
             text-align: center;
         }
 
-        a.link {
-            color: var(--pink-primary);
-            text-decoration: none;
-            font-weight: bold;
+        .alert {
+            background-color: var(--pink-light);
+            color: var(--pink-dark);
+            padding: 16px 24px;
+            margin-bottom: 32px;
+            border-left: 5px solid var(--pink-primary);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
 
-        a.link:hover {
-            text-decoration: underline;
+        .section-space {
+            margin-bottom: 40px;
         }
 
+        @media (max-width: 768px) {
+            .container {
+                margin: 40px 16px;
+                padding: 28px;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            nav a {
+                margin: 6px 12px 0 0;
+                display: inline-block;
+            }
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <h2>Laundry Pinki</h2>
+    <h2>Pinki Laundry</h2>
     <nav>
         <a href="/">Home</a>
-        <a href="/services">Layanan</a>
+        <a href="/order">Pesan</a>
+        <a href="/orders">Pesanan</a>
         @if (session()->has('loginId'))
             <a href="/logout">Logout</a>
         @else
@@ -133,19 +167,21 @@
 </header>
 
 <div class="container">
+    {{-- Flash Message --}}
     @if (session('success'))
-        <div class="alert">{{ session('success') }}</div>
+        <div class="alert">✅ {{ session('success') }}</div>
     @endif
 
     @if (session('error'))
-        <div class="alert">{{ session('error') }}</div>
+        <div class="alert">❌ {{ session('error') }}</div>
     @endif
 
+    {{-- Konten Halaman --}}
     @yield('content')
 </div>
 
 <footer>
-    &copy; {{ date('Y') }} Laundry Pinki • Salsabila Zahra
+    &copy; {{ date('Y') }} Laundry Pinki • Dibuat dengan 💖 oleh Salsabila Zahra
 </footer>
 
 </body>
